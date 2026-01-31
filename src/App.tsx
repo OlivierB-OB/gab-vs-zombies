@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { Game } from './game/Game';
 
 const App: React.FC = () => {
-  return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>Welcome to Gab vs Zombies</h1>
-      <p>Your React TypeScript boilerplate is ready!</p>
-    </div>
-  );
+  const canvas = useRef(null);
+
+  useEffect(() => {
+    if (!canvas.current) return;
+    const game = new Game();
+    game.start(window, canvas.current);
+    return () => {
+      game.stop();
+    };
+  }, [canvas]);
+
+  return <canvas ref={canvas} />;
 };
 
 export default App;
