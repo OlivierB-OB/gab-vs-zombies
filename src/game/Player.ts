@@ -1,7 +1,11 @@
+import { HandGun } from './HandGun';
+
 export class Player {
   public position: [number, number] = [0, 0];
   public azimuth: number = 0;
   public speed: number = 5;
+  public rotationSpeed: number = 1;
+  public currentWeapon: HandGun = new HandGun();
 
   moveForward() {
     const angle = this.capAngle(this.azimuth - 90);
@@ -23,15 +27,28 @@ export class Player {
     this.position = this.nextPosition(this.position, angle);
   }
 
-  setAzimuth(azimuth: number) {
-    this.azimuth = this.capAngle(azimuth);
+  turnLeft() {
+    this.setAzimuth(this.azimuth - this.rotationSpeed);
   }
 
-  draw(ctx: CanvasRenderingContext2D) {
-    ctx.beginPath();
-    const [x, y] = this.position;
-    ctx.rect(x, y, 150, 100);
-    ctx.stroke();
+  turnRight() {
+    this.setAzimuth(this.azimuth + this.rotationSpeed);
+  }
+
+  draw(
+    ctx: CanvasRenderingContext2D,
+    getViewCoordinates: ([x, y]: [number, number]) => [number, number]
+  ) {
+    const [x, y] = getViewCoordinates(this.position);
+    ctx.translate(x, y);
+    ctx.rotate(this.degreeToRad(this.azimuth));
+    this.currentWeapon.draw(ctx);
+    ctx.fillStyle = '#888800';
+    ctx.fillRect(-15, -10, 30, 20);
+  }
+
+  private setAzimuth(azimuth: number) {
+    this.azimuth = this.capAngle(azimuth);
   }
 
   private nextPosition(
@@ -47,6 +64,6 @@ export class Player {
   }
 
   private capAngle(angle: number): number {
-    return (angle + 360) % 360;
+    return angle % 360;
   }
 }

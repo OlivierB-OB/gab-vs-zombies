@@ -7,6 +7,7 @@ export class Controler {
   private onmouseup = (event: MouseEvent) => this.mouseupHandler(event);
   private onmousemove = (event: MouseEvent) => this.mousemoveHandler(event);
   private onwheel = (event: WheelEvent) => this.wheelHandler(event);
+  private lastClientX: number | null = null;
 
   constructor(private readonly player: Player) {}
 
@@ -36,7 +37,7 @@ export class Controler {
         break;
       case 'ArrowDown':
         console.log('ArrowDown');
-        this.player.moveForward();
+        this.player.moveBackward();
         break;
       case 'ArrowLeft':
         console.log('ArrowLeft');
@@ -59,6 +60,14 @@ export class Controler {
 
   mousemoveHandler(event: MouseEvent) {
     console.log('mousemove', event);
+    if (this.lastClientX != null) {
+      if (this.lastClientX > event.clientX) {
+        this.player.turnLeft();
+      } else {
+        this.player.turnRight();
+      }
+    }
+    this.lastClientX = event.clientX;
   }
 
   wheelHandler(event: WheelEvent) {
