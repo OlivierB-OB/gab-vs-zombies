@@ -1,11 +1,14 @@
 import { HandGun } from './HandGun';
+import { ImageManager } from './ImageManager';
 
 export class Player {
   public position: [number, number] = [0, 0];
   public azimuth: number = 0;
   public speed: number = 5;
-  public rotationSpeed: number = 1;
+  public rotationSpeed: number = 3;
   public currentWeapon: HandGun = new HandGun();
+
+  constructor(private readonly imageManager: ImageManager) {}
 
   moveForward() {
     const angle = this.capAngle(this.azimuth - 90);
@@ -43,8 +46,8 @@ export class Player {
     ctx.translate(x, y);
     ctx.rotate(this.degreeToRad(this.azimuth));
     this.currentWeapon.draw(ctx);
-    ctx.fillStyle = '#888800';
-    ctx.fillRect(-15, -10, 30, 20);
+    const playerHandgunImg = this.imageManager.getImage('player-handgun');
+    ctx.drawImage(playerHandgunImg, -25, -70, 50, 90);
   }
 
   private setAzimuth(azimuth: number) {

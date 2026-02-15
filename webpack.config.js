@@ -39,6 +39,9 @@ module.exports = {
     hot: true,
     historyApiFallback: true,
     open: true,
+    static: {
+      directory: path.join(__dirname, 'public'),
+    },
   },
   devtool: 'source-map',
 };

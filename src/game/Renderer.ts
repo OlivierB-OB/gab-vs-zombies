@@ -1,4 +1,5 @@
 import { Player } from './Player';
+import { ZombieManager } from './ZombieManager';
 
 export class Renderer {
   public canvas: HTMLCanvasElement | null = null;
@@ -6,7 +7,10 @@ export class Renderer {
   public width: number = 0;
   public height: number = 0;
 
-  constructor(private readonly player: Player) {}
+  constructor(
+    private readonly player: Player,
+    private readonly zombieManager: ZombieManager
+  ) {}
 
   start(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -28,6 +32,13 @@ export class Renderer {
     this.context.save();
     this.context.fillStyle = '#008800';
     this.context.fillRect(0, 0, width, height);
+    this.context.restore();
+
+    // draw zombies
+    this.context.save();
+    this.zombieManager.draw(this.context, ([x, y]) =>
+      this.getViewCoordinates([x, y])
+    );
     this.context.restore();
 
     // draw player
